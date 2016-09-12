@@ -1,0 +1,91 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+
+<!-- firebase elements -->
+<link rel="import" href="../bower_components/polymerfire/firebase-app.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-auth.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-query.html">
+
+
+<dom-module id="my-view1">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+
+      paper-button.indigo {
+        background-color: var(--paper-indigo-500);
+        color: white;
+        --paper-button-raised-keyboard-focus: {
+          background-color: var(--paper-pink-a200) !important;
+          color: white !important;
+        };
+      }
+    </style>
+
+    <firebase-app auth-domain="scoreboard-badminton.firebaseapp.com"
+                  name="scoreboard-badminton"
+                  database-url="https://scoreboard-badminton.firebaseio.com"
+                  api-key="AIzaSyDbxHaWFSy6mZAZUnJ2qy014CbIGtapJOo">
+    </firebase-app>
+    <firebase-auth id="auth" app-name="scoreboard-badminton">
+    </firebase-auth>
+    <firebase-document id="fireQuery"
+                       path="/fixture"
+                       app-name="scoreboard-badminton">
+    </firebase-document>
+
+
+    <paper-button raised on-tap="handleTap">Create New Fixture</paper-button>
+
+    <paper-dialog id="dialog2">
+      <h2>Create a new fixture here</h2>
+      <paper-input id="player1" label="Player 1"></paper-input>
+      <p>Vs</p>
+      <paper-input id="player2" label="Player 2"></paper-input>
+      <div class="buttons">
+        <paper-button raised class="indigo" on-tap="createFixture"> Let's Play !!</paper-button>
+      </div>
+    </paper-dialog>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'my-view1',
+      properties: {
+        fixture: {
+          type: Object,
+          value: function () { return {}; }
+        }
+      },
+      handleTap: function() {
+        this.$.dialog2.open();
+      },
+      createFixture: function() {
+
+        this.$.fireQuery.setStoredValue('/fixture', {
+          'player1': this.$.player1.value,
+          'player2': this.$.player2.value
+        });
+      }
+    });
+  </script>
+</dom-module>

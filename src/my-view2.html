@@ -1,0 +1,71 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+
+<!-- firebase elements -->
+<link rel="import" href="../bower_components/polymerfire/firebase-app.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-auth.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-query.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="../bower_components/paper-material/paper-material.html">
+
+
+<dom-module id="my-view2">
+  <template>
+    <style is="custom-style" include="shared-styles iron-flex iron-flex-alignment iron-flex-factors">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+    </style>
+
+    <firebase-app auth-domain="scoreboard-badminton.firebaseapp.com"
+                  name="scoreboard-badminton"
+                  database-url="https://scoreboard-badminton.firebaseio.com"
+                  api-key="AIzaSyDbxHaWFSy6mZAZUnJ2qy014CbIGtapJOo">
+    </firebase-app>
+    <firebase-auth id="auth" app-name="scoreboard-badminton">
+    </firebase-auth>
+    <firebase-document path="/fixture" data="{{data}}" app-name="scoreboard-badminton"></firebase-document>
+
+    <div class="horizontal layout flex wrap">
+      <div class="flex-3"></div>
+      <paper-material elevation="5" class="flex-4">
+        <p> Player 1 : {{data.player1}}</p>
+      </paper-material>
+      <div class="flex-3"></div>
+      <paper-material elevation="5" class="flex-4">
+        <p> Player 2 : {{data.player2}}</p>
+      </paper-material>
+      <div class="flex-2"></div>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'my-view2',
+      showData: function () {
+        console.log('data', this.data);
+      },
+      attached: function() {
+        this.$.auth.signInAnonymously().then(function() {
+          console.log('logged in successfully');
+          console.log('team is ', this.data);
+        });
+      }
+
+    });
+  </script>
+</dom-module>
